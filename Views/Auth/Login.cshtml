@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI';
+        background: linear-gradient(to right, #667eea, #764ba2);
+    }
+
+    .auth-box {
+        width: 320px;
+        margin: 100px auto;
+        padding: 25px;
+        background: white;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    input {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="auth-box">
+    <h2>🔐 Login</h2>
+
+    <input type="email" id="email" placeholder="Enter Email" />
+    <input type="password" id="password" placeholder="Enter Password" />
+
+    <button onclick="login()">Login</button>
+
+    <p id="msg"></p>
+
+    <a href="/Auth/Register">New user? Register</a>
+</div>
+
+<script>
+    function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+                document.getElementById("msg").innerText = "✅ Login Successful";
+
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1000);
+            } else {
+                document.getElementById("msg").innerText = data.message;
+            }
+        });
+    }
+</script>

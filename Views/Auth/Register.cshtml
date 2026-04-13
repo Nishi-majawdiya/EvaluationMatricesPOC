@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI';
+        background: linear-gradient(to right, #667eea, #764ba2);
+    }
+
+    .auth-box {
+        width: 320px;
+        margin: 100px auto;
+        padding: 25px;
+        background: white;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    input {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="auth-box">
+    <h2>📝 Register</h2>
+
+    <input type="text" id="name" placeholder="Enter Name" />
+    <input type="email" id="email" placeholder="Enter Email" />
+    <input type="password" id="password" placeholder="Enter Password" />
+
+    <button onclick="register()">Register</button>
+
+    <p id="msg"></p>
+
+    <a href="/Auth/Login">Already have account? Login</a>
+</div>
+
+<script>
+    function register() {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, password })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("msg").innerText = data.message;
+        });
+    }
+</script>
