@@ -38,13 +38,13 @@ public class CaloriesService
         var r2 = doc.RootElement.GetProperty("R2").GetDouble();
         var dataSource = doc.RootElement.GetProperty("DataSource").GetString();
 
-        return new
+        return new PredictionResult
         {
-            prediction = prediction.PredictedCalories,
-            rmse = rmse,
-            mae = mae,
-            r2 = r2,
-             message = dataSource
+            Prediction = prediction.PredictedCalories,
+            RMSE = (float)rmse,
+            MAE = (float)mae,
+            R2 = (float)r2,
+            Message = "Using dummy data"
         };
     }
 }

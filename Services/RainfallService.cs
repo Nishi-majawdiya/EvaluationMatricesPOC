@@ -29,7 +29,8 @@ namespace EvaluationMatricesPOC.Services
                 Prediction = result.Score,
                 RMSE = _metrics.RMSE,
                 MAE = _metrics.MAE,
-                R2 = _metrics.R2
+                R2 = _metrics.R2,
+                Message = "Using CSV data"
             };
         }
     }

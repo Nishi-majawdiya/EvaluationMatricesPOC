@@ -29,13 +29,17 @@ public class LaptopService
         var metricsPath = Path.Combine(Directory.GetCurrentDirectory(), "MLModels", "laptop_metrics.json");
         var json = File.ReadAllText(metricsPath);
         var doc = JsonDocument.Parse(json);
+        var rmse = doc.RootElement.GetProperty("RMSE").GetDouble();
+        var mae = doc.RootElement.GetProperty("MAE").GetDouble();
+        var r2 = doc.RootElement.GetProperty("R2").GetDouble();
 
-        return new
+        return new PredictionResult
         {
-            prediction = prediction.PredictedPrice,
-            rmse = doc.RootElement.GetProperty("RMSE").GetDouble(),
-            mae = doc.RootElement.GetProperty("MAE").GetDouble(),
-            r2 = doc.RootElement.GetProperty("R2").GetDouble()
+            Prediction = prediction.PredictedPrice, // ✅ FIXED
+            RMSE = (float)rmse,
+            MAE = (float)mae,
+            R2 = (float)r2,
+            Message = "Using CSV data"
         };
     }
 }
