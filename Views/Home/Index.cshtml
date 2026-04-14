@@ -380,31 +380,34 @@ ViewData["Title"] = "ML Dashboard";
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("token")
                 },
-                body: JSON.stringify({
+                body: JSON.stringify([{
                     temperature: +temp.value,
                     humidity: +humidity.value,
                     windSpeed: +wind.value,
                     pressure: +pressure.value,
                     rainfall: 0
-                })
+                }])
             });
 
             const r = await res.json();
+            const data = r[0];
 
-            $("rainResult").innerHTML = r.prediction.toFixed(2);
+            const value = data.prediction ?? data.score;
+
+            $("rainResult").innerHTML = value.toFixed(2);
 
             $("rainMetrics").innerHTML = `
                 <div class="metric-card">
                     <span>RMSE</span>
-                    <strong>${r.rmse.toFixed(2)}</strong>
+                    <strong>${data.rmse.toFixed(2)}</strong>
                 </div>
                 <div class="metric-card">
                     <span>MAE</span>
-                    <strong>${r.mae.toFixed(2)}</strong>
+                    <strong>${data.mae.toFixed(2)}</strong>
                 </div>
                 <div class="metric-card">
                     <span>R²</span>
-                    <strong>${r.r2.toFixed(2)}</strong>
+                    <strong>${data.r2.toFixed(2)}</strong>
                 </div>
             `;
 
@@ -434,35 +437,37 @@ ViewData["Title"] = "ML Dashboard";
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("token")
                 },
-                body: JSON.stringify({
+                body: JSON.stringify([{
                     weight: +weight.value,
                     duration: +duration.value,
                     heartRate: +heartRate.value,
                     exerciseType: exercise.value,
                     caloriesBurned: 0
-                })
+                }])
             });
 
-            const r = await res.json();
+                const r = await res.json();
+    const data = r.data ? r.data[0] : r[0];
 
-            $("caloriesResult").innerHTML = r.prediction.toFixed(2) + " kcal";
-            $("dataMsg").innerText = r.message;
+    const value = data.prediction ?? data.score;
 
-            $("caloriesMetrics").innerHTML = `
-                <div class="metric-card">
-                    <span>RMSE</span>
-                    <strong>${r.rmse.toFixed(2)}</strong>
-                </div>
-                <div class="metric-card">
-                    <span>MAE</span>
-                    <strong>${r.mae.toFixed(2)}</strong>
-                </div>
-                <div class="metric-card">
-                    <span>R²</span>
-                    <strong>${r.r2.toFixed(2)}</strong>
-                </div>
-            `;
+    $("caloriesResult").innerHTML = value.toFixed(2) + " kcal";
+    $("dataMsg").innerText = data.message ?? "";
 
+    $("caloriesMetrics").innerHTML = `
+        <div class="metric-card">
+            <span>RMSE</span>
+            <strong>${data.rmse.toFixed(2)}</strong>
+        </div>
+        <div class="metric-card">
+            <span>MAE</span>
+            <strong>${data.mae.toFixed(2)}</strong>
+        </div>
+        <div class="metric-card">
+            <span>R²</span>
+            <strong>${data.r2.toFixed(2)}</strong>
+        </div>
+    `;
         } catch (err) {
             console.error(err);
             alert("Calories prediction failed ❌");
@@ -488,34 +493,37 @@ ViewData["Title"] = "ML Dashboard";
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("token")
                 },
-                body: JSON.stringify({
+                body: JSON.stringify([{
                     brand: $("lapBrand").value,
                     ram: +ram.value,
                     storage: +storage.value,
                     processor: $("lapProcessor").value,
                     screenSize: +screen.value,
                     price: 0
-                })
+                }])
             });
 
-            const r = await res.json();
+                const r = await res.json();
+    const data = r.data[0];
 
-            $("laptopResult").innerHTML = "₹ " + r.prediction.toFixed(2);
+    const value = data.prediction ?? data.score;
 
-            $("laptopMetrics").innerHTML = `
-                <div class="metric-card">
-                    <span>RMSE</span>
-                    <strong>${r.rmse.toFixed(2)}</strong>
-                </div>
-                <div class="metric-card">
-                    <span>MAE</span>
-                    <strong>${r.mae.toFixed(2)}</strong>
-                </div>
-                <div class="metric-card">
-                    <span>R²</span>
-                    <strong>${r.r2.toFixed(2)}</strong>
-                </div>
-            `;
+    $("laptopResult").innerHTML = "₹ " + value.toFixed(2);
+
+    $("laptopMetrics").innerHTML = `
+        <div class="metric-card">
+            <span>RMSE</span>
+            <strong>${data.rmse.toFixed(2)}</strong>
+        </div>
+        <div class="metric-card">
+            <span>MAE</span>
+            <strong>${data.mae.toFixed(2)}</strong>
+        </div>
+        <div class="metric-card">
+            <span>R²</span>
+            <strong>${data.r2.toFixed(2)}</strong>
+        </div>
+    `;
 
         } catch (err) {
             console.error(err);
