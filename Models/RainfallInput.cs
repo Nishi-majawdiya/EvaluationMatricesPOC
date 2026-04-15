@@ -16,7 +16,7 @@ namespace EvaluationMatricesPOC.Models
         [LoadColumn(3)]
         public float Pressure { get; set; }
 
-        [LoadColumn(4)] // 👈 THIS IS IMPORTANT
+        [LoadColumn(4)] // THIS IS IMPORTANT
         public float Rainfall { get; set; }
     }
 }

@@ -33,16 +33,17 @@ try
         ));
 
     // Services
-    builder.Services.AddScoped<AuthService>();
-    builder.Services.AddSingleton<RainfallService>();
-    builder.Services.AddSingleton<CaloriesService>();
-    builder.Services.AddSingleton<LaptopService>();
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddSingleton<IRainfallService, RainfallService>();
+    builder.Services.AddSingleton<ICaloriesService, CaloriesService>();
+    builder.Services.AddSingleton<ILaptopService, LaptopService>();
 
     // JWT
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-            var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+            var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing in configuration");
+            var key = Encoding.UTF8.GetBytes(jwtKey);
 
             options.TokenValidationParameters = new TokenValidationParameters
             {

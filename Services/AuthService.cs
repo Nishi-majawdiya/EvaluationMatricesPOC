@@ -1,12 +1,14 @@
-﻿using EvaluationMatricesPOC.Models;
+using EvaluationMatricesPOC.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EvaluationMatricesPOC.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
@@ -17,10 +19,12 @@ namespace EvaluationMatricesPOC.Services
             _config = config;
         }
 
-        // ✅ REGISTER
-        public object Register(RegisterModel model)
+        /// <summary>
+        /// Registers a new user asynchronously.
+        /// </summary>
+        public async Task<object> RegisterAsync(RegisterModel model)
         {
-            if (_context.Users.Any(u => u.Email == model.Email))
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
                 return new { message = "User already exists ❌" };
 
             var user = new User
@@ -31,15 +35,17 @@ namespace EvaluationMatricesPOC.Services
             };
 
             _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new { message = "User registered successfully ✅" };
         }
 
-        // ✅ LOGIN
-        public object Login(LoginModel model)
+        /// <summary>
+        /// Authenticates a user and returns a token asynchronously.
+        /// </summary>
+        public async Task<object> LoginAsync(LoginModel model)
         {
-            var user = _context.Users.FirstOrDefault(u =>
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
                 u.Email == model.Email && u.Password == model.Password);
 
             if (user == null)
@@ -54,7 +60,9 @@ namespace EvaluationMatricesPOC.Services
             };
         }
 
-        // ✅ JWT TOKEN
+        /// <summary>
+        /// Generates a JWT token for the specified user.
+        /// </summary>
         private string GenerateJwtToken(User user)
         {
             var claims = new[]

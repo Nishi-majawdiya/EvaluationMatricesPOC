@@ -1,7 +1,8 @@
-﻿using EvaluationMatricesPOC.Models;
+using EvaluationMatricesPOC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EvaluationMatricesPOC.Services;
+using System.Threading.Tasks;
 
 namespace EvaluationMatricesPOC.Controllers   
 {
@@ -9,28 +10,28 @@ namespace EvaluationMatricesPOC.Controllers
     [Route("api/auth")]
     public class AuthApiController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthApiController(AuthService authService)
+        public AuthApiController(IAuthService authService)
         {
             _authService = authService;
         }
 
-        // ✅ NO AUTHORIZE HERE
+        // NO AUTHORIZE HERE
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register(RegisterModel model)
+        public async Task<IActionResult> Register(RegisterModel model)
         {
-            var result = _authService.Register(model);
+            var result = await _authService.RegisterAsync(model);
             return Ok(result);
         }
 
         // ✅ NO AUTHORIZE HERE
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
-            var token = _authService.Login(model);
+            var token = await _authService.LoginAsync(model);
             return Ok(token);
         }
     }
